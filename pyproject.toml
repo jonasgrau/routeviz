@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "routeviz"
+dynamic = ["version"]
+description = "Plot, animate and verify vehicle routing (CVRP) solutions from the command line."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Jonas Grau" }]
+requires-python = ">=3.10"
+dependencies = ["matplotlib>=3.7", "pillow>=9"]
+keywords = ["vehicle routing", "cvrp", "cvrplib", "operations research", "visualization"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Environment :: Console",
+]
+
+[project.urls]
+Homepage = "https://github.com/jonasgrau/routeviz"
+
+[project.scripts]
+routeviz = "routeviz.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[tool.hatch.version]
+path = "src/routeviz/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/routeviz"]
