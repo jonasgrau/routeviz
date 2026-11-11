@@ -3,7 +3,7 @@
 Plot, animate and **verify** vehicle routing (CVRP) solutions from the command line.
 
 <p align="center">
-  <img src="docs/A-n32-k5.gif" width="420" alt="Animated optimal solution of CVRPLIB instance A-n32-k5">
+  <img src="docs/A-n32-k5.gif" width="640" alt="Animated optimal solution of CVRPLIB instance A-n32-k5">
 </p>
 
 Reads the standard [CVRPLIB](http://vrp.galgos.inf.puc-rio.br/index.php/en/) formats
@@ -26,8 +26,15 @@ routeviz plot    A-n32-k5.vrp A-n32-k5.sol -o out.svg # also .png / .pdf
 routeviz animate A-n32-k5.vrp A-n32-k5.sol -o out.gif # routes drawn edge by edge
 ```
 
-Options: `--labels` (customer ids), `--dark`, `--size`; for `animate` also `--fps`
-and `--max-frames`.
+Figures are laid out like a journal figure: **(a)** the routes on the instance's
+coordinate plane, with travel direction, the depot (■) and customers whose circle
+area is proportional to demand; **(b)** each route's load $q_k/Q$ against the
+capacity line, with the mean utilisation $\bar u$. The header gives $n$, $Q$, the number
+of routes $K$, the objective $z$, the distance convention and the feasibility verdict.
+In the animation, $z$ and the load bars grow as the tours are drawn.
+
+Options: `--labels` (customer ids), `--dark`, `--size`, `--no-load-panel`; for
+`animate` also `--fps` and `--max-frames`.
 
 ### `check`: don't trust a reported cost
 
@@ -70,7 +77,7 @@ order around the depot (by route centroid), so routes that are next to each othe
 in that order never share a colour. Heavily overlapping routes can still coincide.
 
 <p align="center">
-  <img src="docs/X-n101-k25.png" width="420" alt="Best known solution of X-n101-k25">
+  <img src="docs/X-n101-k25.png" width="640" alt="Best known solution of X-n101-k25">
 </p>
 
 ## Limitations

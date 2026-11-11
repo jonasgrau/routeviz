@@ -42,7 +42,8 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("plot", help="static image (.svg, .png, .pdf)")
     _add_inputs(p)
     p.add_argument("-o", "--out", help="output file (default: <solution>.svg)")
-    p.add_argument("--size", type=float, default=7.0, help="figure size in inches (default 7)")
+    p.add_argument("--size", type=float, default=5.5, help="figure height in inches (default 5.5)")
+    p.add_argument("--no-load-panel", action="store_true", help="omit panel (b), the capacity utilisation")
     _add_style(p)
 
     a = sub.add_parser("animate", help="animated GIF, routes drawn edge by edge")
@@ -51,7 +52,8 @@ def build_parser() -> argparse.ArgumentParser:
     a.add_argument("--fps", type=_positive_int, default=12)
     a.add_argument("--max-frames", type=_positive_int, default=240,
                    help="cap on drawing frames; edges are batched for large instances")
-    a.add_argument("--size", type=float, default=6.0)
+    a.add_argument("--size", type=float, default=5.0)
+    a.add_argument("--no-load-panel", action="store_true", help="omit panel (b)")
     _add_style(a)
 
     c = sub.add_parser("check", help="verify feasibility and recompute the cost")
@@ -89,11 +91,13 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "plot":
         out = Path(args.out) if args.out else _default_out(args.solution, ".svg")
-        render.plot(instance, solution, out, dark=args.dark, labels=args.labels, size=args.size)
+        render.plot(instance, solution, out, dark=args.dark, labels=args.labels, size=args.size,
+                    panel_b=not args.no_load_panel)
     else:
         out = Path(args.out) if args.out else _default_out(args.solution, ".gif")
         render.animate(instance, solution, out, dark=args.dark, labels=args.labels,
-                       size=args.size, fps=args.fps, max_frames=args.max_frames)
+                       size=args.size, fps=args.fps, max_frames=args.max_frames,
+                       panel_b=not args.no_load_panel)
     print(out)
     return 0
 

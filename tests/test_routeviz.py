@@ -190,3 +190,25 @@ def test_no_colour_collision_between_angular_neighbours(n_routes):
 def test_cli_rejects_zero_frames(tmp_path):
     with pytest.raises(SystemExit):
         main(["animate", str(DATA / "A-n32-k5.vrp"), str(DATA / "A-n32-k5.sol"), "--max-frames", "0"])
+
+
+def test_animation_final_state_matches_solution(tmp_path, monkeypatch):
+    """z and loads shown at the end of the GIF equal the checked values (no double counting)."""
+    import routeviz.render as render
+
+    captured = {}
+    real_setup = render._setup
+
+    def spy(*args, **kwargs):
+        f = real_setup(*args, **kwargs)
+        captured["f"] = f
+        return f
+
+    monkeypatch.setattr(render, "_setup", spy)
+    inst, sol = load_instance(DATA / "A-n32-k5.vrp"), load_solution(DATA / "A-n32-k5.sol")
+    render.animate(inst, sol, tmp_path / "a.gif", max_frames=7, fps=4, size=3, hold_seconds=0.5)
+    f = captured["f"]
+    widths = [bar.get_width() for bar in f.bars]
+    expected = [sum(inst.demands[c] for c in r) / inst.capacity for r in sol.routes]
+    assert widths == pytest.approx(expected)
+    assert "z = 784" in f.subtitle.get_text()
